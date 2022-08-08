@@ -1,0 +1,90 @@
+//SPDX-License-Identifier:MIT
+pragma solidity 0.8.3;
+//多线继承——不同的
+// Order of inheritance - most base -lke to derived
+/* 原则：从基(础)类到派生的关系——从越基础的合约到派生（继承）合约之间有顺序关系
+把被继承的最少的合约（越接近基础）放在最前面，继承最多的（越派生的）放在后面
+ */
+/*
+    X
+  / |
+ Y  |
+  \ |
+    Z
+合约顺序是 X(最基础）,Y（最中间）,Z（最派生）,  
+ */
+
+/*
+    X
+   /|
+  / A
+ Y  |
+  \ B
+   \|
+    Z
+合约顺序是 X(最基础）,Y（最中间）,A,B,Z（最派生）,  
+ */
+
+ //以第2种多线继承为例 
+ //注意：有继承关系的合约（子，父合约）中，“直接继承”的函数自定义名称不能重复,"覆盖继承“的必须一致；
+ //如：bax，bay,baa,bab,baz,
+ contract X{
+    function foo () public pure virtual returns(string memory ){   
+        return "X";
+    }
+    function bar () public pure virtual returns (string memory) {
+        return "X";
+    }
+    function bax () public pure returns (string memory) {
+        return "X";
+    }
+}
+
+contract Y is X {
+    function foo () public pure virtual override returns(string memory ){   
+        return "Y";
+    }
+    function bar () public pure virtual override returns (string memory) {
+        return "Y";
+    }
+    function bay () public pure returns (string memory) {
+        return "Y";
+    }
+}
+
+contract A is X {
+    function foo () public pure virtual override returns(string memory ){   
+        return "A";
+    }
+    function bar () public pure virtual override returns (string memory) {
+        return "A";
+    }
+    function baa () public pure returns (string memory) {
+        return "A";
+    }
+}
+
+contract B is A {
+    function foo () public pure virtual override returns(string memory ){   
+        return "B";
+    }
+    function bar () public pure virtual override returns (string memory) {
+        return "B";
+    }
+    function bab () public pure returns (string memory) {
+        return "B";
+    }
+}
+
+//注意：要遵从原则（Z is X,Y）——X要写在Y前面
+contract Z is X,Y,A,B {
+     function foo () public pure override(X,Y,A,B) returns(string memory ){   
+        return "Z";               
+    }
+    function bar () public pure  override(X,Y,A,B) returns (string memory) {
+        return "Z";
+    }
+    function baz () public pure returns (string memory) {
+        return "Z";
+    }
+}

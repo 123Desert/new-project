@@ -1,0 +1,47 @@
+//SPDX-License-Identifier:MIT
+pragma solidity ^0.8.3;
+//继承：一个合约可以继承另一个合约
+//作用：希望让子合约 使用一部分父合约的功能 同时也有B自己的一些功能 ————看结尾效果
+//把A合约中的代码复制到B合约中 同时修改一部分逻辑 ——继承可以节省代码量
+contract A{
+    function foo () public pure virtual returns(string memory ){   
+        return "A";
+    }
+
+    function bar () public pure virtual returns (string memory) {
+        return "A";
+    }
+function baz () public pure returns (string memory) {
+        return "A";
+    }
+    
+    //more code here
+}
+
+//父合约A加上virtual关键词 定义为可以被重写的 
+//父合约A是被继承 子合约B是继承     B is A—— B是继承于A的 
+//子合约B加上override关键词 定义为可以覆盖的
+contract B is A {
+    function foo () public pure override returns(string memory ){   
+        return "B";
+    }
+
+    function bar () public pure virtual override returns (string memory) {
+        return "B";
+}
+}
+//继承的效果：覆盖继承：foo bar—— （父）virtual+（子）override 经过重写 对应返回的是子合约B的逻辑 
+//           直接继承：baz——  函数在父合约里 不在子合约里 没有重写 对应返回的是父合约A的逻辑
+
+//二次继承：C is B ，B is A, —— C继承了A和B合约的函数
+
+contract C is B {
+    function bar () public pure override returns(string memory){
+        return "C";
+    }
+}
+
+//继承的效果：分别调用A,B,C,合约 它的返回值是不同的 ————思考一下应用场景
+//调用A合约 返回 A,A,A,
+//调用B合约 返回 A,B,A,
+//调用C合约 返回 A,B,C,
